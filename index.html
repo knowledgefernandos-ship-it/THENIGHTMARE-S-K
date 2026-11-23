@@ -1,0 +1,1307 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OMNI AI STUDIO | Super Inteligência Artificial Tudo-em-Um</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Marked.js para formatação rica de Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        serif: ['Playfair Display', 'serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        omni: {
+                            50: '#f0f4ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                            accent: '#06b6d4',
+                            neon: '#a855f7'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados e Glassmorphism */
+        :root {
+            --glass-bg-dark: rgba(15, 23, 42, 0.72);
+            --glass-border-dark: rgba(255, 255, 255, 0.08);
+            --glass-bg-light: rgba(255, 255, 255, 0.82);
+            --glass-border-light: rgba(15, 23, 42, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .dark body {
+            background-color: #060913;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.16) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.14) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
+            color: #f8fafc;
+        }
+
+        html:not(.dark) body {
+            background-color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
+            color: #0f172a;
+        }
+
+        .glass-panel {
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .dark .glass-panel {
+            background: var(--glass-bg-dark);
+            border: 1px solid var(--glass-border-dark);
+        }
+
+        html:not(.dark) .glass-panel {
+            background: var(--glass-bg-light);
+            border: 1px solid var(--glass-border-light);
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.04);
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+
+        /* Estilização do Markdown nas respostas da IA */
+        .markdown-body p { margin-bottom: 0.75rem; line-height: 1.65; }
+        .markdown-body p:last-child { margin-bottom: 0; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+            font-weight: 700;
+            margin-top: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .markdown-body h1 { font-size: 1.35rem; }
+        .markdown-body h2 { font-size: 1.18rem; }
+        .markdown-body h3 { font-size: 1.05rem; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.4rem; margin-bottom: 0.75rem; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.4rem; margin-bottom: 0.75rem; }
+        .markdown-body li { margin-bottom: 0.3rem; }
+        .markdown-body strong { font-weight: 700; color: #818cf8; }
+        html:not(.dark) .markdown-body strong { color: #4f46e5; }
+        .markdown-body blockquote {
+            border-left: 3px solid #6366f1;
+            padding-left: 0.9rem;
+            font-style: italic;
+            opacity: 0.9;
+            margin: 0.75rem 0;
+        }
+        .markdown-body pre {
+            position: relative;
+            background: #0b1120 !important;
+            color: #e2e8f0 !important;
+            padding: 1rem;
+            padding-top: 2.3rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            margin: 0.85rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        .markdown-body code:not(pre code) {
+            background: rgba(99, 102, 241, 0.16);
+            color: #a5b4fc;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.375rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+        }
+        html:not(.dark) .markdown-body code:not(pre code) {
+            color: #4338ca;
+        }
+
+        /* Animação de digitação */
+        .typing-dot {
+            animation: typingBounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="h-[100dvh] flex flex-col md:flex-row overflow-hidden selection:bg-indigo-500 selection:text-white">
+
+    <!-- Notificação Toast Flutuante (Substitui alert/confirm) -->
+    <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Overlay escuro para menu mobile -->
+    <div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
+
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-72 glass-panel flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out border-r">
+        <!-- Logo & Cabeçalho Sidebar -->
+        <div class="p-4 flex items-center justify-between border-b border-slate-200/10">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="ph-bold ph-atom text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">OMNI AI STUDIO</h1>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest opacity-60 block -mt-1">Ultra Engine v3.1</span>
+                </div>
+            </div>
+            <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg hover:bg-slate-500/10">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Botão Nova Sessão -->
+        <div class="p-3">
+            <button onclick="createNewChat()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20 transition-all active:scale-[0.98]">
+                <i class="ph-bold ph-plus text-base"></i>
+                <span>Nova Conversa</span>
+            </button>
+        </div>
+
+        <!-- Ferramentas Rápidas (1-Clique) -->
+        <div class="px-3 py-2">
+            <p class="px-2 text-[11px] font-bold uppercase tracking-wider opacity-50 mb-2">Super Ferramentas (1-Clique)</p>
+            <div class="grid grid-cols-1 gap-1.5">
+                <button onclick="triggerQuickTool('simplify')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-indigo-500/15 text-left transition-colors group">
+                    <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-fill ph-sparkle"></i>
+                    </span>
+                    <span>Simplificar Difícil → Fácil</span>
+                </button>
+                <button onclick="triggerQuickTool('impossible')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-indigo-500/15 text-left transition-colors group">
+                    <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-fill ph-brain"></i>
+                    </span>
+                    <span>Resolver Questão Impossível</span>
+                </button>
+                <button onclick="triggerQuickTool('summarize')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-indigo-500/15 text-left transition-colors group">
+                    <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-fill ph-text-align-left"></i>
+                    </span>
+                    <span>Resumidor Ultra-Rápido</span>
+                </button>
+                <button onclick="triggerQuickTool('plan')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-indigo-500/15 text-left transition-colors group">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-fill ph-calendar-check"></i>
+                    </span>
+                    <span>Plano de Estudo / Treino</span>
+                </button>
+                <button onclick="triggerQuickTool('code')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-indigo-500/15 text-left transition-colors group">
+                    <span class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-fill ph-code"></i>
+                    </span>
+                    <span>Gerador de Código Completo</span>
+                </button>
+                <button onclick="triggerQuickTool('translate')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium hover:bg-indigo-500/15 text-left transition-colors group">
+                    <span class="w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-fill ph-translate"></i>
+                    </span>
+                    <span>Tradutor Universal Pro</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Histórico de Conversas -->
+        <div class="flex-1 overflow-y-auto px-3 py-2 mt-1">
+            <div class="flex items-center justify-between px-2 mb-2">
+                <p class="text-[11px] font-bold uppercase tracking-wider opacity-50">Histórico Salvo</p>
+                <button onclick="clearAllHistory()" title="Limpar histórico" class="text-[11px] opacity-50 hover:opacity-100 hover:text-rose-400 transition-opacity">Limpar</button>
+            </div>
+            <div id="chat-history-list" class="space-y-1">
+                <!-- Itens do histórico injetados via JS -->
+            </div>
+        </div>
+
+        <!-- Rodapé Sidebar: Alternar Tema -->
+        <div class="p-3 border-t border-slate-200/10 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs opacity-75">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Sistema Online</span>
+            </div>
+            <button onclick="toggleTheme()" class="p-2 rounded-xl glass-panel hover:bg-indigo-500/10 transition-colors flex items-center gap-1.5 text-xs font-medium" title="Alternar Tema">
+                <i id="theme-icon" class="ph-fill ph-sun text-amber-400 text-base"></i>
+                <span id="theme-label">Claro</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="flex-1 flex flex-col h-full min-w-0 relative">
+        
+        <!-- CABEÇALHO SUPERIOR (TOPBAR) -->
+        <header class="glass-panel border-b px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 z-20 shrink-0">
+            <div class="flex items-center gap-2">
+                <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-xl hover:bg-slate-500/10 active:scale-95">
+                    <i class="ph-bold ph-list text-xl"></i>
+                </button>
+                
+                <!-- Navegação Principal entre Módulos (Chat vs Estúdio Visual) -->
+                <div class="flex p-1 rounded-xl bg-slate-500/10 border border-slate-500/10">
+                    <button id="tab-chat" onclick="switchWorkspace('chat')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all bg-indigo-600 text-white shadow-sm">
+                        <i class="ph-fill ph-chats-circle text-base"></i>
+                        <span>Chat Omnisciente</span>
+                    </button>
+                    <button id="tab-studio" onclick="switchWorkspace('studio')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all opacity-75 hover:opacity-100">
+                        <i class="ph-fill ph-paint-brush-broad text-base text-cyan-400"></i>
+                        <span>Estúdio Visual & Canva</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botão Simplificador Extremo Global (Destaque) -->
+            <div class="flex items-center gap-2">
+                <button id="btn-simplify-mode" onclick="toggleSimplifyMode()" class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition-all border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20" title="Ativa explicações ultra-simples como se fosse para uma criança">
+                    <i class="ph-fill ph-magic-wand text-base"></i>
+                    <span class="hidden sm:inline">Simplificador Extremo:</span>
+                    <span id="simplify-status" class="uppercase">OFF</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ========================================================= -->
+        <!-- WORKSPACE 1: CHAT OMNISCIENTE & RESOLVEDOR UNIVERSAL      -->
+        <!-- ========================================================= -->
+        <section id="workspace-chat" class="flex-1 flex flex-col min-h-0">
+            
+            <!-- Barra de Seleção de Especialistas -->
+            <div class="px-3 sm:px-6 py-2 border-b border-slate-200/10 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+                <span class="text-[11px] font-bold uppercase tracking-wider opacity-50 shrink-0 mr-1">Especialista:</span>
+                <button onclick="selectPersona('universal')" data-persona="universal" class="persona-btn active shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm transition-all">
+                    <i class="ph-fill ph-planet"></i> Gênio Universal
+                </button>
+                <button onclick="selectPersona('mentor')" data-persona="mentor" class="persona-btn shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 glass-panel hover:border-indigo-500/50 transition-all">
+                    <i class="ph-fill ph-heart"></i> Mentor Pessoal & Psicologia
+                </button>
+                <button onclick="selectPersona('exatas')" data-persona="exatas" class="persona-btn shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 glass-panel hover:border-indigo-500/50 transition-all">
+                    <i class="ph-fill ph-function"></i> Professor de Exatas
+                </button>
+                <button onclick="selectPersona('dev')" data-persona="dev" class="persona-btn shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 glass-panel hover:border-indigo-500/50 transition-all">
+                    <i class="ph-fill ph-terminal-window"></i> Engenheiro de Software
+                </button>
+                <button onclick="selectPersona('business')" data-persona="business" class="persona-btn shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 glass-panel hover:border-indigo-500/50 transition-all">
+                    <i class="ph-fill ph-chart-line-up"></i> Estrategista de Negócios
+                </button>
+            </div>
+
+            <!-- Área de Mensagens -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto px-3 sm:px-6 py-6 space-y-6 scroll-smooth">
+                <!-- Tela de Boas-Vindas (Exibida quando o chat está vazio) -->
+                <div id="welcome-screen" class="max-w-3xl mx-auto text-center py-6 sm:py-10 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-semibold text-indigo-400 border border-indigo-500/30 animate-float">
+                        <i class="ph-fill ph-lightning"></i>
+                        <span>Inteligência Híbrida: Raciocínio Profundo + Busca Web + Arte IA</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+                        Como posso resolver o seu mundo hoje?
+                    </h2>
+                    <p class="text-sm sm:text-base opacity-70 max-w-xl mx-auto">
+                        Resolva cálculos impossíveis, crie códigos completos, peça conselhos pessoais, simplifique assuntos difíceis ou gere artes profissionais em segundos.
+                    </p>
+
+                    <!-- Sugestões Rápidas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-2xl mx-auto pt-2">
+                        <button onclick="sendSuggestedPrompt('Explique Física Quântica e Buracos Negros como se eu tivesse 10 anos, usando analogias do dia a dia.')" class="p-3.5 rounded-2xl glass-panel hover:border-indigo-500/50 transition-all group">
+                            <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs mb-1">
+                                <i class="ph-fill ph-sparkle"></i> Simplificador Extremo
+                            </div>
+                            <p class="text-xs opacity-80 group-hover:opacity-100">"Explique Física Quântica como se eu tivesse 10 anos..."</p>
+                        </button>
+                        <button onclick="sendSuggestedPrompt('Resolva passo a passo: Uma torneira enche um tanque em 3 horas e outra em 6 horas. Com um ralo que esvazia em 12 horas aberto, em quanto tempo o tanque enche?')" class="p-3.5 rounded-2xl glass-panel hover:border-indigo-500/50 transition-all group">
+                            <div class="flex items-center gap-2 text-cyan-400 font-semibold text-xs mb-1">
+                                <i class="ph-fill ph-function"></i> Exatas & Lógica
+                            </div>
+                            <p class="text-xs opacity-80 group-hover:opacity-100">"Resolva passo a passo um problema complexo de vazão..."</p>
+                        </button>
+                        <button onclick="sendSuggestedPrompt('Estou procrastinando muito e sem foco nos meus objetivos. Crie um plano psicológico e prático de 7 dias para retomar o controle total da minha rotina.')" class="p-3.5 rounded-2xl glass-panel hover:border-indigo-500/50 transition-all group">
+                            <div class="flex items-center gap-2 text-purple-400 font-semibold text-xs mb-1">
+                                <i class="ph-fill ph-heart"></i> Mentor Pessoal
+                            </div>
+                            <p class="text-xs opacity-80 group-hover:opacity-100">"Plano prático de 7 dias para vencer a procrastinação..."</p>
+                        </button>
+                        <button onclick="switchWorkspace('studio')" class="p-3.5 rounded-2xl glass-panel hover:border-cyan-500/50 transition-all group">
+                            <div class="flex items-center gap-2 text-emerald-400 font-semibold text-xs mb-1">
+                                <i class="ph-fill ph-paint-brush-broad"></i> Estúdio Visual IA
+                            </div>
+                            <p class="text-xs opacity-80 group-hover:opacity-100">"Criar imagens ilimitadas com IA e editar no estilo Canva →"</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Input do Chat -->
+            <div class="p-3 sm:px-6 sm:pb-5 pt-2 shrink-0">
+                <div class="max-w-4xl mx-auto glass-panel rounded-2xl p-2 shadow-xl border border-indigo-500/20 focus-within:border-indigo-500/60 transition-all">
+                    <!-- Indicador de Modo Ativo -->
+                    <div class="flex items-center justify-between px-2 pb-1.5 text-[11px] opacity-70">
+                        <div class="flex items-center gap-2">
+                            <span id="active-persona-badge" class="font-semibold text-indigo-400">Modo: Gênio Universal</span>
+                            <span id="active-simplify-badge" class="hidden px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 font-bold">✨ Simplificação Extrema Ativa</span>
+                        </div>
+                        <button onclick="toggleSearchGrounding()" id="btn-web-search" class="flex items-center gap-1 hover:text-cyan-400 transition-colors" title="Conectar à Pesquisa Google em Tempo Real">
+                            <i class="ph-bold ph-globe"></i>
+                            <span id="web-search-label">Busca Web: ON</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-end gap-2">
+                        <textarea id="chat-input" rows="1" placeholder="Pergunte qualquer coisa, cole um problema difícil ou peça uma solução..." class="w-full bg-transparent border-0 focus:ring-0 resize-none py-2.5 px-3 text-sm sm:text-base max-h-40 outline-none" onkeydown="handleChatKeydown(event)" oninput="autoResizeTextarea(this)"></textarea>
+                        
+                        <button id="btn-send-chat" onclick="sendMessage()" class="p-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transition-all active:scale-95 shrink-0 flex items-center justify-center">
+                            <i class="ph-bold ph-paper-plane-right text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- WORKSPACE 2: ESTÚDIO DE CRIAÇÃO VISUAL INFINITA (CANVA)   -->
+        <!-- ========================================================= -->
+        <section id="workspace-studio" class="hidden flex-1 overflow-y-auto p-3 sm:p-6">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- COLUNA ESQUERDA: GERADOR DE IMAGENS IA + GALERIA (5 cols) -->
+                <div class="lg:col-span-5 space-y-5">
+                    <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-base flex items-center gap-2">
+                                <i class="ph-fill ph-sparkle text-purple-400 text-xl"></i>
+                                <span>Gerador de Imagens IA</span>
+                            </h3>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 font-semibold">Ilimitado</span>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold opacity-75 mb-1.5">Descreva a imagem que você imagina:</label>
+                            <textarea id="image-prompt" rows="3" placeholder="Ex: Um astronauta surfando em uma onda cósmica neon com planetas ao fundo, iluminação cinematográfica..." class="w-full rounded-xl bg-slate-500/10 border border-slate-500/20 focus:border-purple-500 p-3 text-sm outline-none resize-none"></textarea>
+                        </div>
+
+                        <!-- Estilos Rápidos -->
+                        <div>
+                            <label class="block text-xs font-semibold opacity-75 mb-1.5">Estilo Visual:</label>
+                            <div class="grid grid-cols-3 gap-1.5" id="style-selector">
+                                <button onclick="selectImageStyle(this, 'Fotorrealista, 8k, iluminação de estúdio, altíssima definição')" class="style-chip active py-2 px-2 rounded-xl text-xs font-medium bg-purple-600 text-white border border-purple-500 transition-all">📸 Fotorrealista</button>
+                                <button onclick="selectImageStyle(this, 'Estilo Cyberpunk futurista, luzes neon vibrantes, chuva, ficção científica')" class="style-chip py-2 px-2 rounded-xl text-xs font-medium glass-panel hover:border-purple-500/50 transition-all">🌆 Cyberpunk</button>
+                                <button onclick="selectImageStyle(this, 'Arte estilo Anime japonês moderno, cores vibrantes, traços detalhados')" class="style-chip py-2 px-2 rounded-xl text-xs font-medium glass-panel hover:border-purple-500/50 transition-all">🎌 Anime</button>
+                                <button onclick="selectImageStyle(this, 'Renderização 3D estilo Pixar/Unreal Engine 5, texturas suaves, volumetric lighting')" class="style-chip py-2 px-2 rounded-xl text-xs font-medium glass-panel hover:border-purple-500/50 transition-all">🧊 Arte 3D</button>
+                                <button onclick="selectImageStyle(this, 'Design minimalista moderno, vetor limpo, cores harmônicas, fundo clean')" class="style-chip py-2 px-2 rounded-xl text-xs font-medium glass-panel hover:border-purple-500/50 transition-all">✨ Minimalista</button>
+                                <button onclick="selectImageStyle(this, 'Logotipo profissional vetorial, design icônico de marca, fundo sólido limpo')" class="style-chip py-2 px-2 rounded-xl text-xs font-medium glass-panel hover:border-purple-500/50 transition-all">🛡️ Logo Pro</button>
+                            </div>
+                        </div>
+
+                        <button id="btn-generate-img" onclick="generateAIImage()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-purple-600/25 transition-all active:scale-[0.98]">
+                            <i class="ph-bold ph-magic-wand text-lg"></i>
+                            <span>Gerar Imagem com IA</span>
+                        </button>
+                    </div>
+
+                    <!-- Galeria de Imagens Geradas -->
+                    <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-sm flex items-center gap-2">
+                                <i class="ph-fill ph-images text-cyan-400"></i>
+                                <span>Galeria Recente</span>
+                            </h4>
+                            <span class="text-[11px] opacity-60">Clique para enviar ao Editor</span>
+                        </div>
+                        <div id="ai-gallery" class="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
+                            <div class="col-span-2 text-center py-8 opacity-50 text-xs border border-dashed border-slate-500/30 rounded-xl">
+                                Suas criações aparecerão aqui. Gere sua primeira imagem acima!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUNA DIREITA: MINI-EDITOR ESTILO CANVA (7 cols) -->
+                <div class="lg:col-span-7 glass-panel rounded-2xl p-4 sm:p-5 flex flex-col gap-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/10 pb-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                                <i class="ph-bold ph-layout"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-base">Editor Gráfico OmniCanva</h3>
+                                <p class="text-[11px] opacity-60">Personalize textos, formatos e baixe em alta resolução</p>
+                            </div>
+                        </div>
+
+                        <!-- Seletor de Formato -->
+                        <div class="flex items-center gap-1.5">
+                            <select id="canvas-format" onchange="changeCanvasFormat()" class="rounded-xl bg-slate-500/15 border border-slate-500/20 px-3 py-1.5 text-xs font-semibold outline-none">
+                                <option value="1080x1080">Post Instagram (1:1)</option>
+                                <option value="1080x1920">Story / Reels (9:16)</option>
+                                <option value="1280x720">Capa YouTube / Slide (16:9)</option>
+                            </select>
+                            <button onclick="downloadCanvaDesign()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95">
+                                <i class="ph-bold ph-download-simple"></i>
+                                <span>Baixar PNG</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Controles do Design -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-500/5 p-3 rounded-xl border border-slate-500/10">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Título Principal</label>
+                            <input type="text" id="canva-title" value="O FUTURO É AGORA" oninput="renderCanvaCanvas()" class="w-full rounded-lg bg-slate-500/10 border border-slate-500/20 px-3 py-1.5 text-xs font-medium outline-none focus:border-cyan-400">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Subtítulo / Chamada</label>
+                            <input type="text" id="canva-subtitle" value="Criado com OMNI AI STUDIO" oninput="renderCanvaCanvas()" class="w-full rounded-lg bg-slate-500/10 border border-slate-500/20 px-3 py-1.5 text-xs font-medium outline-none focus:border-cyan-400">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1">
+                                <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Fonte</label>
+                                <select id="canva-font" onchange="renderCanvaCanvas()" class="w-full rounded-lg bg-slate-500/10 border border-slate-500/20 px-2.5 py-1.5 text-xs outline-none">
+                                    <option value="Montserrat">Montserrat (Impacto)</option>
+                                    <option value="Inter">Inter (Moderna)</option>
+                                    <option value="Playfair Display">Playfair (Elegante)</option>
+                                    <option value="JetBrains Mono">JetBrains (Tech)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Cor Texto</label>
+                                <input type="color" id="canva-text-color" value="#ffffff" oninput="renderCanvaCanvas()" class="w-10 h-8 rounded cursor-pointer bg-transparent border-0">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Fundo</label>
+                                <input type="color" id="canva-bg-color" value="#1e1b4b" oninput="clearCanvaImageAndColor()" class="w-10 h-8 rounded cursor-pointer bg-transparent border-0" title="Usar cor sólida de fundo">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1">
+                                <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Tamanho Texto: <span id="font-size-val">64</span>px</label>
+                                <input type="range" id="canva-font-size" min="28" max="110" value="64" oninput="document.getElementById('font-size-val').innerText=this.value; renderCanvaCanvas()" class="w-full accent-cyan-400">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-[11px] font-bold uppercase opacity-60 mb-1">Filtro Escuro</label>
+                                <input type="range" id="canva-overlay" min="0" max="80" value="35" oninput="renderCanvaCanvas()" class="w-full accent-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Área de Visualização do Canvas -->
+                    <div class="flex-1 flex items-center justify-center bg-black/30 rounded-xl p-4 min-h-[320px] relative overflow-hidden">
+                        <canvas id="omni-canvas" class="max-w-full max-h-[460px] rounded-lg shadow-2xl object-contain transition-all"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // =========================================================================
+        // CONFIGURAÇÃO DA API GEMINI & ESTADO GLOBAL DO OMNI AI STUDIO
+        // =========================================================================
+        const apiKey = ""; // Fornecido automaticamente pelo ambiente de execução
+        const TEXT_MODEL = "gemini-3-flash-preview";
+        const IMAGE_MODEL = "gemini-3.1-flash-lite-image";
+
+        // Estado da Aplicação
+        let state = {
+            currentChatId: null,
+            chats: [],
+            persona: 'universal',
+            simplifyMode: false,
+            webSearch: true,
+            selectedStyle: 'Fotorrealista, 8k, iluminação de estúdio, altíssima definição',
+            generatedImages: [],
+            canvaImageObj: null
+        };
+
+        // Definições dos Especialistas (System Prompts)
+        const PERSONAS = {
+            universal: {
+                name: "Gênio Universal",
+                prompt: "Você é o OMNI AI STUDIO, a inteligência artificial mais avançada, rápida e completa do mundo. Responda sempre em Português do Brasil com clareza, profundidade, empatia e precisão absoluta. Resolva qualquer tipo de problema (acadêmico, pessoal, lógico, técnico ou criativo) oferecendo soluções práticas, estruturadas e brilhantes."
+            },
+            mentor: {
+                name: "Mentor Pessoal & Psicologia",
+                prompt: "Você é o Mentor Pessoal e Especialista em Inteligência Emocional do OMNI AI STUDIO. Acolha o usuário com empatia profunda, sabedoria prática e psicologia baseada em evidências. Ajude-o a superar bloqueios, ansiedade, dilemas pessoais e de carreira com passos claros, acolhedores e transformadores em Português."
+            },
+            exatas: {
+                name: "Professor de Exatas",
+                prompt: "Você é o Professor Titular de Matemática, Física, Química e Lógica do OMNI AI STUDIO. Resolva qualquer equação, cálculo ou problema complexo passo a passo, mostrando o raciocínio lógico por trás de cada etapa de forma didática, organizada e fácil de acompanhar em Português."
+            },
+            dev: {
+                name: "Engenheiro de Software",
+                prompt: "Você é o Arquiteto de Software Sênior do OMNI AI STUDIO. Escreva códigos limpos, completos, modernos, otimizados e bem comentados. Explique a arquitetura, evite placeholders e entregue soluções prontas para produção em Português."
+            },
+            business: {
+                name: "Estrategista de Negócios",
+                prompt: "Você é o Estrategista Chefe de Negócios, Marketing e Inovação do OMNI AI STUDIO. Crie planos de ação de alto impacto, estratégias de vendas, ideias disruptivas e análises de mercado práticas e lucrativas em Português."
+            }
+        };
+
+        // =========================================================================
+        // INICIALIZAÇÃO
+        // =========================================================================
+        window.onload = function() {
+            loadLocalData();
+            initCanvas();
+            if (state.chats.length === 0) {
+                createNewChat(false);
+            } else {
+                loadChat(state.chats[0].id);
+            }
+            renderHistoryList();
+        };
+
+        function loadLocalData() {
+            try {
+                const savedChats = localStorage.getItem('omni_ai_chats');
+                if (savedChats) state.chats = JSON.parse(savedChats);
+                
+                const savedTheme = localStorage.getItem('omni_ai_theme');
+                if (savedTheme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    updateThemeUI(false);
+                }
+            } catch (e) {
+                console.warn("Armazenamento local indisponível:", e);
+            }
+        }
+
+        function saveChatsToStorage() {
+            try {
+                localStorage.setItem('omni_ai_chats', JSON.stringify(state.chats));
+            } catch (e) {
+                console.warn("Erro ao salvar histórico:", e);
+            }
+        }
+
+        // =========================================================================
+        // CONTROLE DE UI, TEMAS E NAVEGAÇÃO
+        // =========================================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                info: 'bg-indigo-600 text-white',
+                success: 'bg-emerald-600 text-white',
+                warning: 'bg-amber-500 text-slate-950',
+                error: 'bg-rose-600 text-white'
+            };
+            toast.className = `${colors[type] || colors.info} px-4 py-2.5 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-0 opacity-100`;
+            toast.innerHTML = `<i class="ph-bold ph-info text-base"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('omni_ai_theme', isDark ? 'dark' : 'light');
+            updateThemeUI(isDark);
+        }
+
+        function updateThemeUI(isDark) {
+            const icon = document.getElementById('theme-icon');
+            const label = document.getElementById('theme-label');
+            if (isDark) {
+                icon.className = 'ph-fill ph-sun text-amber-400 text-base';
+                label.innerText = 'Claro';
+            } else {
+                icon.className = 'ph-fill ph-moon-stars text-indigo-600 text-base';
+                label.innerText = 'Escuro';
+            }
+        }
+
+        function switchWorkspace(target) {
+            const chatWs = document.getElementById('workspace-chat');
+            const studioWs = document.getElementById('workspace-studio');
+            const tabChat = document.getElementById('tab-chat');
+            const tabStudio = document.getElementById('tab-studio');
+
+            if (target === 'chat') {
+                chatWs.classList.remove('hidden');
+                studioWs.classList.add('hidden');
+                tabChat.className = 'px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all bg-indigo-600 text-white shadow-sm';
+                tabStudio.className = 'px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all opacity-75 hover:opacity-100';
+            } else {
+                chatWs.classList.add('hidden');
+                studioWs.classList.remove('hidden');
+                tabStudio.className = 'px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-sm';
+                tabChat.className = 'px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all opacity-75 hover:opacity-100';
+                renderCanvaCanvas();
+            }
+        }
+
+        function toggleSimplifyMode() {
+            state.simplifyMode = !state.simplifyMode;
+            const btn = document.getElementById('btn-simplify-mode');
+            const status = document.getElementById('simplify-status');
+            const badge = document.getElementById('active-simplify-badge');
+
+            if (state.simplifyMode) {
+                btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition-all border-amber-400 bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/30';
+                status.innerText = 'ON';
+                badge.classList.remove('hidden');
+                showToast('Simplificador Extremo ATIVADO! Tudo será explicado de forma ultra-fácil.', 'warning');
+            } else {
+                btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition-all border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20';
+                status.innerText = 'OFF';
+                badge.classList.add('hidden');
+                showToast('Modo Simplificador desativado.', 'info');
+            }
+        }
+
+        function toggleSearchGrounding() {
+            state.webSearch = !state.webSearch;
+            const label = document.getElementById('web-search-label');
+            label.innerText = state.webSearch ? 'Busca Web: ON' : 'Busca Web: OFF';
+            showToast(state.webSearch ? 'Pesquisa Google em tempo real ativada' : 'Pesquisa Web desativada');
+        }
+
+        function selectPersona(key) {
+            state.persona = key;
+            document.querySelectorAll('.persona-btn').forEach(btn => {
+                if (btn.dataset.persona === key) {
+                    btn.className = 'persona-btn active shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm transition-all';
+                } else {
+                    btn.className = 'persona-btn shrink-0 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 glass-panel hover:border-indigo-500/50 transition-all';
+                }
+            });
+            document.getElementById('active-persona-badge').innerText = `Modo: ${PERSONAS[key].name}`;
+        }
+
+        // =========================================================================
+        // FERRAMENTAS RÁPIDAS (1-CLIQUE)
+        // =========================================================================
+        function triggerQuickTool(tool) {
+            switchWorkspace('chat');
+            if (window.innerWidth < 768) toggleSidebar();
+
+            const input = document.getElementById('chat-input');
+            const prompts = {
+                simplify: "Transforme este assunto difícil em algo super fácil de entender (com analogias simples): ",
+                impossible: "Use pensamento lateral, lógica avançada e criatividade fora da caixa para resolver este problema que parece não ter solução: ",
+                summarize: "Faça um resumo executivo ultra-claro com os pontos principais do seguinte texto:\n\n",
+                plan: "Crie um plano personalizado, detalhado e prático (passo a passo semanal) para o meu objetivo de: ",
+                code: "Escreva o código completo, limpo, comentado e pronto para rodar para criar: ",
+                translate: "Traduza o texto abaixo com naturalidade nativa, preservando o tom e explicando expressões idiomáticas se houver:\n\n"
+            };
+
+            if (tool === 'simplify' && !state.simplifyMode) {
+                toggleSimplifyMode();
+            }
+
+            input.value = prompts[tool] || "";
+            input.focus();
+            autoResizeTextarea(input);
+        }
+
+        // =========================================================================
+        // GERENCIAMENTO DE CONVERSAS E CHAT GEMINI API
+        // =========================================================================
+        function createNewChat(switchToIt = true) {
+            const newChat = {
+                id: 'chat_' + Date.now(),
+                title: 'Nova Conversa',
+                messages: []
+            };
+            state.chats.unshift(newChat);
+            saveChatsToStorage();
+            renderHistoryList();
+            if (switchToIt) {
+                loadChat(newChat.id);
+                switchWorkspace('chat');
+                if (window.innerWidth < 768) toggleSidebar();
+            }
+        }
+
+        function loadChat(chatId) {
+            state.currentChatId = chatId;
+            const chat = state.chats.find(c => c.id === chatId);
+            const container = document.getElementById('chat-messages');
+            const welcome = document.getElementById('welcome-screen');
+
+            // Limpar mensagens atuais mantendo a welcome-screen
+            Array.from(container.children).forEach(child => {
+                if (child.id !== 'welcome-screen') child.remove();
+            });
+
+            if (!chat || chat.messages.length === 0) {
+                welcome.classList.remove('hidden');
+            } else {
+                welcome.classList.add('hidden');
+                chat.messages.forEach(msg => appendMessageToDOM(msg.role, msg.text, msg.sources, false));
+            }
+            renderHistoryList();
+        }
+
+        function clearAllHistory() {
+            state.chats = [];
+            saveChatsToStorage();
+            createNewChat(true);
+            showToast('Histórico de conversas limpo.', 'info');
+        }
+
+        function renderHistoryList() {
+            const list = document.getElementById('chat-history-list');
+            list.innerHTML = '';
+            state.chats.forEach(chat => {
+                const isActive = chat.id === state.currentChatId;
+                const btn = document.createElement('button');
+                btn.onclick = () => {
+                    loadChat(chat.id);
+                    switchWorkspace('chat');
+                    if (window.innerWidth < 768) toggleSidebar();
+                };
+                btn.className = `w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2 transition-colors truncate ${isActive ? 'bg-indigo-600/20 text-indigo-400 font-semibold border border-indigo-500/30' : 'hover:bg-slate-500/10 opacity-75 hover:opacity-100'}`;
+                btn.innerHTML = `
+                    <i class="ph ph-chat-teardrop-text shrink-0 text-sm"></i>
+                    <span class="truncate">${escapeHtml(chat.title)}</span>
+                `;
+                list.appendChild(btn);
+            });
+        }
+
+        function autoResizeTextarea(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+        }
+
+        function handleChatKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendSuggestedPrompt(text) {
+            const input = document.getElementById('chat-input');
+            input.value = text;
+            sendMessage();
+        }
+
+        async function fetchWithBackoff(url, options, maxRetries = 4) {
+            let delay = 1000;
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return response;
+                    if (response.status === 429 || response.status >= 500) {
+                        if (attempt === maxRetries) throw new Error(`Erro HTTP ${response.status}`);
+                        await new Promise(r => setTimeout(r, delay));
+                        delay *= 2;
+                        continue;
+                    }
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error?.message || `Erro na API (${response.status})`);
+                } catch (err) {
+                    if (attempt === maxRetries) throw err;
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chat = state.chats.find(c => c.id === state.currentChatId);
+            if (!chat) return;
+
+            // Esconder tela de boas-vindas
+            document.getElementById('welcome-screen').classList.add('hidden');
+
+            // Atualizar título do chat se for a primeira mensagem
+            if (chat.messages.length === 0) {
+                chat.title = text.slice(0, 36) + (text.length > 36 ? '...' : '');
+                renderHistoryList();
+            }
+
+            // Salvar e exibir mensagem do usuário
+            chat.messages.push({ role: 'user', text });
+            saveChatsToStorage();
+            appendMessageToDOM('user', text);
+
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Mostrar indicador de digitação
+            const typingId = showTypingIndicator();
+            const sendBtn = document.getElementById('btn-send-chat');
+            sendBtn.disabled = true;
+            sendBtn.classList.add('opacity-50');
+
+            try {
+                // Construir histórico de contexto para a API
+                const contents = chat.messages.slice(-10).map(m => ({
+                    role: m.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: m.text }]
+                }));
+
+                // Montar System Instruction com base na Persona + Simplificador Extremo
+                let systemInstructionText = PERSONAS[state.persona].prompt;
+                if (state.simplifyMode) {
+                    systemInstructionText += "\n\n[MODO SIMPLIFICADOR EXTREMO ATIVO]: Você DEVE explicar tudo da maneira mais simples, didática e fácil do universo, como se estivesse explicando para uma criança de 10 anos ou um iniciante absoluto. Use analogias do cotidiano, passos curtos, exemplos visuais e evite jargões complicados sem traduzi-los imediatamente.";
+                }
+
+                const payload = {
+                    contents: contents,
+                    systemInstruction: {
+                        parts: [{ text: systemInstructionText }]
+                    }
+                };
+
+                if (state.webSearch) {
+                    payload.tools = [{ google_search: {} }];
+                }
+
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`;
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                removeTypingIndicator(typingId);
+
+                const candidate = result.candidates?.[0];
+                const replyText = candidate?.content?.parts?.[0]?.text;
+
+                if (replyText) {
+                    // Extrair fontes da busca se disponíveis
+                    let sources = [];
+                    const attributions = candidate?.groundingMetadata?.groundingAttributions;
+                    if (attributions) {
+                        sources = attributions
+                            .map(a => ({ uri: a.web?.uri, title: a.web?.title }))
+                            .filter(s => s.uri && s.title);
+                    }
+
+                    chat.messages.push({ role: 'model', text: replyText, sources });
+                    saveChatsToStorage();
+                    appendMessageToDOM('model', replyText, sources);
+                } else {
+                    throw new Error("A IA não retornou conteúdo válido.");
+                }
+
+            } catch (error) {
+                removeTypingIndicator(typingId);
+                appendMessageToDOM('model', `⚠️ **Ops! Ocorreu uma instabilidade na conexão:** ${error.message}. Tente enviar novamente.`);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-50');
+            }
+        }
+
+        function appendMessageToDOM(role, text, sources = [], animate = true) {
+            const container = document.getElementById('chat-messages');
+            const wrapper = document.createElement('div');
+            wrapper.className = `max-w-4xl mx-auto flex gap-3 sm:gap-4 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+
+            if (role === 'user') {
+                wrapper.innerHTML = `
+                    <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm bg-gradient-to-br from-indigo-600 to-purple-600 text-white px-4 py-3 shadow-md text-sm sm:text-base whitespace-pre-wrap leading-relaxed">${escapeHtml(text)}</div>
+                `;
+            } else {
+                const formattedHtml = marked.parse(text);
+                let sourcesHtml = '';
+                if (sources && sources.length > 0) {
+                    const uniqueSources = sources.slice(0, 3);
+                    sourcesHtml = `
+                        <div class="mt-3 pt-2.5 border-t border-slate-500/15 flex flex-wrap items-center gap-1.5">
+                            <span class="text-[10px] font-bold uppercase opacity-50 mr-1"><i class="ph-bold ph-globe"></i> Fontes:</span>
+                            ${uniqueSources.map(s => `<a href="${s.uri}" target="_blank" rel="noopener" class="text-[11px] px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 truncate max-w-[180px]">${escapeHtml(s.title)}</a>`).join('')}
+                        </div>
+                    `;
+                }
+
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shrink-0 shadow-md mt-0.5">
+                        <i class="ph-bold ph-atom text-white text-base sm:text-lg"></i>
+                    </div>
+                    <div class="flex-1 min-w-0 glass-panel rounded-2xl rounded-tl-sm px-4 py-3.5 sm:px-5 sm:py-4 shadow-sm">
+                        <div class="markdown-body text-sm sm:text-base">${formattedHtml}</div>
+                        ${sourcesHtml}
+                        <div class="mt-2 pt-2 flex items-center justify-end gap-2 opacity-60 hover:opacity-100 transition-opacity">
+                            <button onclick="copyPlainText(this)" data-raw="${escapeAttr(text)}" class="text-[11px] flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-slate-500/15 transition-colors">
+                                <i class="ph ph-copy"></i> Copiar Resposta
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.appendChild(wrapper);
+
+            // Adicionar botões de copiar em todos os blocos <pre><code>
+            if (role === 'model') {
+                wrapper.querySelectorAll('pre').forEach(pre => {
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'absolute top-2 right-2 px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-slate-200 text-[11px] font-sans flex items-center gap-1 transition-colors';
+                    copyBtn.innerHTML = '<i class="ph ph-copy"></i> Copiar Código';
+                    copyBtn.onclick = () => {
+                        const codeText = pre.querySelector('code')?.innerText || pre.innerText;
+                        copyToClipboard(codeText);
+                        copyBtn.innerHTML = '<i class="ph-bold ph-check text-emerald-400"></i> Copiado!';
+                        setTimeout(() => copyBtn.innerHTML = '<i class="ph ph-copy"></i> Copiar Código', 2000);
+                    };
+                    pre.appendChild(copyBtn);
+                });
+            }
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('chat-messages');
+            const id = 'typing_' + Date.now();
+            const el = document.createElement('div');
+            el.id = id;
+            el.className = 'max-w-4xl mx-auto flex gap-3 sm:gap-4 justify-start';
+            el.innerHTML = `
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shrink-0 animate-pulse">
+                    <i class="ph-bold ph-atom text-white text-base"></i>
+                </div>
+                <div class="glass-panel rounded-2xl rounded-tl-sm px-4 py-3.5 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 typing-dot"></span>
+                    <span class="w-2 h-2 rounded-full bg-purple-400 typing-dot"></span>
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 typing-dot"></span>
+                    <span class="text-xs opacity-60 ml-2 font-medium">Processando inteligência...</span>
+                </div>
+            `;
+            container.appendChild(el);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // =========================================================================
+        // ESTÚDIO DE CRIAÇÃO VISUAL INFINITA (IMAGEM IA + EDITOR CANVA)
+        // =========================================================================
+        function selectImageStyle(btn, styleDesc) {
+            state.selectedStyle = styleDesc;
+            document.querySelectorAll('.style-chip').forEach(chip => {
+                chip.className = 'style-chip py-2 px-2 rounded-xl text-xs font-medium glass-panel hover:border-purple-500/50 transition-all';
+            });
+            btn.className = 'style-chip active py-2 px-2 rounded-xl text-xs font-medium bg-purple-600 text-white border border-purple-500 transition-all';
+        }
+
+        async function generateAIImage() {
+            const promptInput = document.getElementById('image-prompt');
+            const rawPrompt = promptInput.value.trim();
+            if (!rawPrompt) {
+                showToast('Digite uma descrição para gerar sua imagem!', 'warning');
+                promptInput.focus();
+                return;
+            }
+
+            const btn = document.getElementById('btn-generate-img');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i><span>Criando Arte com IA...</span>`;
+
+            try {
+                const fullPrompt = `${rawPrompt}. Estilo: ${state.selectedStyle}. Alta qualidade visual.`;
+                const payload = {
+                    contents: [{
+                        parts: [{ text: fullPrompt }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ['TEXT', 'IMAGE']
+                    }
+                };
+
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${IMAGE_MODEL}:generateContent?key=${apiKey}`;
+                const response = await fetchWithBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const base64Data = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+
+                if (!base64Data) {
+                    throw new Error("Não foi possível gerar a imagem neste momento.");
+                }
+
+                const imageUrl = `data:image/png;base64,${base64Data}`;
+                state.generatedImages.unshift({ url: imageUrl, prompt: rawPrompt });
+                renderGallery();
+                loadImageIntoCanva(imageUrl);
+                showToast('Imagem gerada e enviada para o Editor OmniCanva!', 'success');
+
+            } catch (error) {
+                showToast(`Erro ao gerar imagem: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('ai-gallery');
+            if (state.generatedImages.length === 0) return;
+
+            gallery.innerHTML = state.generatedImages.map((img, idx) => `
+                <div class="group relative rounded-xl overflow-hidden border border-slate-500/20 aspect-square bg-slate-900">
+                    <img src="${img.url}" alt="Arte IA" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
+                        <button onclick="loadImageIntoCanva('${img.url}')" class="w-full py-1.5 px-2 rounded-lg bg-cyan-500 text-slate-950 font-bold text-[11px] flex items-center justify-center gap-1">
+                            <i class="ph-bold ph-paint-brush"></i> Editar no Canva
+                        </button>
+                        <a href="${img.url}" download="omni-ai-art-${idx + 1}.png" class="w-full py-1.5 px-2 rounded-lg bg-white/20 text-white font-semibold text-[11px] flex items-center justify-center gap-1 hover:bg-white/30">
+                            <i class="ph-bold ph-download-simple"></i> Baixar
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =========================================================================
+        // MINI-EDITOR GRÁFICO OMNICANVA (HTML5 CANVAS)
+        // =========================================================================
+        function initCanvas() {
+            const canvas = document.getElementById('omni-canvas');
+            canvas.width = 1080;
+            canvas.height = 1080;
+            renderCanvaCanvas();
+        }
+
+        function changeCanvasFormat() {
+            const format = document.getElementById('canvas-format').value;
+            const [w, h] = format.split('x').map(Number);
+            const canvas = document.getElementById('omni-canvas');
+            canvas.width = w;
+            canvas.height = h;
+            renderCanvaCanvas();
+        }
+
+        function loadImageIntoCanva(dataUrl) {
+            const img = new Image();
+            img.onload = () => {
+                state.canvaImageObj = img;
+                renderCanvaCanvas();
+            };
+            img.src = dataUrl;
+        }
+
+        function clearCanvaImageAndColor() {
+            state.canvaImageObj = null;
+            renderCanvaCanvas();
+        }
+
+        function renderCanvaCanvas() {
+            const canvas = document.getElementById('omni-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const bgColor = document.getElementById('canva-bg-color').value;
+            const title = document.getElementById('canva-title').value;
+            const subtitle = document.getElementById('canva-subtitle').value;
+            const font = document.getElementById('canva-font').value;
+            const textColor = document.getElementById('canva-text-color').value;
+            const fontSize = parseInt(document.getElementById('canva-font-size').value, 10);
+            const overlayAlpha = parseInt(document.getElementById('canva-overlay').value, 10) / 100;
+
+            // 1. Fundo (Imagem IA ou Gradiente/Cor Sólida)
+            if (state.canvaImageObj) {
+                const img = state.canvaImageObj;
+                const scale = Math.max(w / img.width, h / img.height);
+                const x = (w / 2) - (img.width / 2) * scale;
+                const y = (h / 2) - (img.height / 2) * scale;
+                ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            } else {
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                grad.addColorStop(0, bgColor);
+                grad.addColorStop(1, '#090d16');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+            }
+
+            // 2. Camada de Contraste (Overlay)
+            ctx.fillStyle = `rgba(0, 0, 0, ${overlayAlpha})`;
+            ctx.fillRect(0, 0, w, h);
+
+            // 3. Moldura Decorativa Sutil
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(40, 40, w - 80, h - 80);
+
+            // 4. Renderizar Título com Quebra de Linha Automática
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = `800 ${fontSize}px "${font}", sans-serif`;
+
+            // Sombra suave no texto para leitura perfeita
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+            ctx.shadowBlur = 18;
+            ctx.shadowOffsetY = 6;
+
+            const maxWidth = w * 0.82;
+            const words = title.split(' ');
+            let lines = [];
+            let currentLine = words[0] || '';
+
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = ctx.measureText(currentLine + " " + word).width;
+                if (width < maxWidth) {
+                    currentLine += " " + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+
+            const lineHeight = fontSize * 1.18;
+            const totalTextHeight = lines.length * lineHeight;
+            let startY = (h / 2) - (totalTextHeight / 2) + (lineHeight / 2) - 20;
+
+            lines.forEach((line, index) => {
+                ctx.fillText(line, w / 2, startY + (index * lineHeight));
+            });
+
+            // 5. Renderizar Subtítulo
+            if (subtitle) {
+                const subSize = Math.max(20, Math.round(fontSize * 0.42));
+                ctx.font = `500 ${subSize}px "Inter", sans-serif`;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.fillText(subtitle, w / 2, startY + (lines.length * lineHeight) + 24);
+            }
+
+            // Resetar sombra
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+        }
+
+        function downloadCanvaDesign() {
+            const canvas = document.getElementById('omni-canvas');
+            const link = document.createElement('a');
+            link.download = `OMNI-DESIGN-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast('Design exportado em alta resolução (PNG)!', 'success');
+        }
+
+        // =========================================================================
+        // UTILITÁRIOS DE SEGURANÇA E ÁREA DE TRANSFERÊNCIA
+        // =========================================================================
+        function escapeHtml(unsafe) {
+            return (unsafe || '')
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function escapeAttr(unsafe) {
+            return (unsafe || '').replace(/"/g, '&quot;');
+        }
+
+        function copyPlainText(btn) {
+            const raw = btn.getAttribute('data-raw');
+            copyToClipboard(raw);
+            showToast('Resposta copiada para a área de transferência!', 'success');
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Erro ao copiar:', err);
+            }
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
+```
